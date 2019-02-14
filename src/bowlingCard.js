@@ -1,6 +1,7 @@
 // TO DO - refactor validation
 // tidy up optional params
 // encapsulate further
+// test third roll validation
 
 function manager(){
   var frames = []
@@ -8,9 +9,9 @@ function manager(){
 
   function input(r1, r2=null, r3=null){
     checkRolls( r1, r2);
-    if (lastFrameStrikeorSpare) {updatelastStrikeorSpare(r1,r2)};
     if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)}
-    addFrame(this.frames.length + 1, r1, r2);
+    if (lastFrameStrikeorSpare) {updatelastStrikeorSpare(r1,r2)};
+    addFrame(r1, r2);
   };
 
   function checkRolls (a, b) {
@@ -21,40 +22,33 @@ function manager(){
   };
 
   function finalFrameInput(r1, r2, r3){
-    if (r1===10) {
-      frame = new Frame(10, r1, null, (r1+r2+r3))
-      frames.push(frame);
-      return frame}
-
-    else {
-      addFrame((this.frames.length + 1), r1, r2, (r1 + r2))
+    if (lastFrameStrikeorSpare) { updatelastStrikeorSpare(r1, r2)}
+    if (isStrikeorSpare(r1, r2)) {
+      return addFrame(r1, r2 , r3)
     }
+    addFrame(r1 ,r2)
   }
 
   function isfinalFrame(){
     return frames.length === 9
   }
 
-  function updatelastStrikeorSpare(r1,r2){
+  function updatelastStrikeorSpare(r1,r2=0){
       frame = frames[(frames.length - 1)];
       if (frame.roll1 === 10) {
-        return frame.totalScore = (10 + r1 + r2)
+        let bonus = r1 + r2;
+        if (bonus > 10) {
+          bonus = 10
+        }
+        return frame.totalScore += bonus
       }
-      frame.totalScore = (10 + r1)
+      frame.totalScore += r1
   };
 
-  function addFrame (frameNo, r1, r2, totalScore) {
-    if (isStrikeorSpare(r1, r2)) {
-      frame = new Frame(frameNo, r1, r2, null)
+  function addFrame (r1, r2, r3 = null) {
+      isStrikeorSpare(r1,r2)
+      frame = new Frame((frames.length + 1), r1, r2, (r1 + r2 + r3), r3)
       frames.push(frame);
-      return frame
-    }
-    else {
-      frame = new Frame(frameNo, r1, r2, (r1+r2))
-      frames.push(frame);
-      lastFrameStrikeorSpare = false
-      return frame
-    }
   }
 
   function isStrikeorSpare(r1, r2) {
@@ -65,10 +59,11 @@ function manager(){
     false
   };
 
-  function Frame(frameNo, r1, r2=null, totalScore) {
+  function Frame(frameNo, r1, r2=null, totalScore, r3 = null) {
     this.id = frameNo;
     this.roll1 = r1;
     this.roll2 = r2;
+    this.roll3 = r3;
     this.totalScore = totalScore;
   };
 
