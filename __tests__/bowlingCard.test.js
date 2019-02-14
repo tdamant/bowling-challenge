@@ -50,6 +50,31 @@ describe ("manager", () => {
       })
     });
 
+    // NEED a test for rolling strike / spare in the 9th and then in the 10th
+
+    describe("final frame", () => {
+      describe("non strike or spare rolled", () => {
+        fithManager = manager();
+        for(let i = 0; i < 9; i++ ){
+          fithManager.input(1, 5);
+        }
+        test("frame treated as normal", () => {
+          fithManager.input(1, 6);
+          expect(fithManager.frames[9].totalScore).toBe(7)
+        });
+      });
+      describe("strike rolled", () => {
+        sixthManager = manager();
+        for(let i = 0; i < 9; i++ ){
+          sixthManager.input(1, 5);
+        }
+        test("three balls can be rolled", () => {
+          sixthManager.input(10, 4, 7);
+          expect(sixthManager.frames[9].totalScore).toBe(21)
+      });
+    });
+  });
+
     describe("roll validation", () => {
       test("a roll can't be more than 10", () => {
         expect(() => {
@@ -73,5 +98,3 @@ describe ("manager", () => {
       });
     });
 });
-
-// frame to be replaced with frams (and frames.length)
