@@ -1,11 +1,10 @@
 function manager(){
-  let frame = 1;
+  var frame = 1;
 
   function frameScorer(a, b){
     checkRolls( a, b);
-    console.log(frame++);
+    this.frame ++
     return a + b;
-
 
     function checkRolls (a, b) {
       let isvalidRoll = ((a >= 0 && a < 11) && (b >= 0 && b < 11))

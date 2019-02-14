@@ -2,9 +2,14 @@ const manager = require('../src/bowlingCard');
 testManager = manager()
 describe ("manager", () => {
   test("knows what frame it's on", () => {
-    testManager.frameScorer(1,2)
+    testManager.frameScorer(1,2);
     expect(testManager.frame).toBe(2)
-  })
+  });
+  test("knows what frame it's on", () => {
+    testManager.frameScorer(1,2);
+    expect(testManager.frame).toBe(3)
+  });
+  
   describe("framescorer", () => {
     test('it adds the rolls together', () => {
       expect(testManager.frameScorer(1, 2)).toBe(3);
