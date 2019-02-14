@@ -1,53 +1,43 @@
 function manager(){
   var frames = []
-  var lastFrameStrike = false
-  var lastFrameSpare = false
+  var lastFrameStrikeorSpare = false
 
-  function frameScorer(a, b=0){
+  function frameScorer(a, b=null){
     checkRolls( a, b);
-    if (lastFrameStrike) {
-      updatePreviousStrike(a,b);
-    }
-    else if (lastFrameSpare) {
-      updatePreviousSpare(a)
+    if (lastFrameStrikeorSpare) {
+      updatePreviousStrikeorSpare(a,b);
     }
     addFrame(this.frames.length + 1, a, b);
     return a + b;
   };
 
   function checkRolls (a, b) {
-    let isvalidRoll = ((a >= 0 && a < 11) && (b >= 0 && b < 11))
+    let isvalidRoll = ((a >= 0 && a < 11) && ((b >= 0 && b < 11) || b === null))
     if (!isvalidRoll) {
       throw("invalid role")
     };
   };
 
-  function updatePreviousStrike(r1,r2){
-      frames[(frames.length - 1)].totalScore = (10+r1+r2)
-  }
-
-  function updatePreviousSpare(r1) {
-    frames[(frames.length - 1)].totalScore = (10+r1)
+  function updatePreviousStrikeorSpare(r1,r2){
+      frame = frames[(frames.length - 1)]
+      if (frame.roll1 === 10) {
+        frame.totalScore = (10 + r1 + r2)
+      }
+      else {
+        frame.totalScore = (10 + r1)
+      }
   }
 
   function addFrame (frameNo, r1, r2, totalScore) {
-    if (isStrike(r1)) {
-      frame = new Frame(frameNo, r1, null, null)
-      frames.push(frame);
-      lastFrameStrike = true
-      return frame
-    }
-    else if (isSpare(r1, r2)) {
+    if (isStrikeorSpare(r1, r2)) {
       frame = new Frame(frameNo, r1, r2, null)
       frames.push(frame);
-      lastFrameSpare = true
       return frame
     }
     else {
       frame = new Frame(frameNo, r1, r2, (r1+r2))
       frames.push(frame);
-      lastFrameStrike = false
-      lastFrameSpare = false
+      lastFrameStrikeorSpare = false
       return frame
     }
   }
@@ -59,20 +49,19 @@ function manager(){
     this.totalScore = totalScore;
   }
 
-  function isStrike(a) {
-    return a === 10;
-  };
-
-  function isSpare(a, b){
-    return (a+b) === 10
+  function isStrikeorSpare(r1, r2) {
+    if (r1 === 10 || (r1+r2 === 10)){
+      lastFrameStrikeorSpare = true
+      return true
+    };
+    false
   };
 
   return {
     Frame: Frame,
     frames: frames,
     frameScorer: frameScorer,
-    isStrike: isStrike,
-    isSpare: isSpare,
+    isStrikeorSpare: isStrikeorSpare,
     manager: manager,
     addFrame: addFrame
   };
