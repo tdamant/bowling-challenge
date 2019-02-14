@@ -2,10 +2,10 @@ function manager(){
   var frames = []
   var lastFrameStrikeorSpare = false
 
-  function frameScorer(a, b=null){
+  function input(a, b=null){
     checkRolls( a, b);
     if (lastFrameStrikeorSpare) {
-      updatePreviousStrikeorSpare(a,b);
+      updatelastStrikeorSpare(a,b);
     }
     addFrame(this.frames.length + 1, a, b);
     return a + b;
@@ -18,15 +18,13 @@ function manager(){
     };
   };
 
-  function updatePreviousStrikeorSpare(r1,r2){
-      frame = frames[(frames.length - 1)]
+  function updatelastStrikeorSpare(r1,r2){
+      frame = frames[(frames.length - 1)];
       if (frame.roll1 === 10) {
-        frame.totalScore = (10 + r1 + r2)
+        return frame.totalScore = (10 + r1 + r2)
       }
-      else {
-        frame.totalScore = (10 + r1)
-      }
-  }
+      frame.totalScore = (10 + r1)
+  };
 
   function addFrame (frameNo, r1, r2, totalScore) {
     if (isStrikeorSpare(r1, r2)) {
@@ -60,10 +58,7 @@ function manager(){
   return {
     Frame: Frame,
     frames: frames,
-    frameScorer: frameScorer,
-    isStrikeorSpare: isStrikeorSpare,
-    manager: manager,
-    addFrame: addFrame
+    input: input
   };
 };
 module.exports = manager;
