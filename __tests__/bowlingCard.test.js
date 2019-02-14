@@ -42,6 +42,10 @@ describe ("manager", () => {
       thirdManager.frameScorer(1,5);
       expect(thirdManager.frames[0].totalScore).toBe(16);
     });
+    test("it only updates scores when a strike is rolled", () => {
+      thirdManager.frameScorer(2,3);
+      expect(thirdManager.frames[1].totalScore).toBe(6);
+    })
   });
 
   describe("when a sapre is rolled", () => {
@@ -56,6 +60,10 @@ describe ("manager", () => {
       fourthManager.frameScorer(5,2);
       expect(fourthManager.frames[0].totalScore).toBe(15)
     });
+    test("it only updates scores when a spare is rolled", () =>{
+      fourthManager.frameScorer(1,5);
+      expect(fourthManager.frames[1].totalScore).toBe(7)
+    })
   });
 
   describe("roll validation", () => {

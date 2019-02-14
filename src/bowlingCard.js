@@ -46,12 +46,13 @@ function manager(){
     else {
       frame = new Frame(frameNo, r1, r2, (r1+r2))
       frames.push(frame);
-      this.lastFrameStrike = false
+      lastFrameStrike = false
+      lastFrameSpare = false
       return frame
     }
   }
 
-  function Frame(frameNo, r1, r2, totalScore) {
+  function Frame(frameNo, r1, r2=null, totalScore) {
     this.id = frameNo;
     this.roll1 = r1;
     this.roll2 = r2;
