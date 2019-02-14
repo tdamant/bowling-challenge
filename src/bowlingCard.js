@@ -10,9 +10,9 @@ function manager(){
 
   function input(r1, r2=null, r3=null){
     checkRolls( r1, r2);
-    if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)}
     if (lastFrameStrike) {updatelastStrike(r1,r2)};
     if (lastFrameSpare) {updatelastSpare(r1)};
+    if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)};
     addFrame(r1, r2);
   };
 
@@ -24,8 +24,6 @@ function manager(){
   };
 
   function finalFrameInput(r1, r2, r3){
-    if (lastFrameStrike) {updatelastStrike(r1,r2)};
-    if (lastFrameSpare) {updatelastSpare(r1)};
     if (isStrike(r1) || isSpare(r1, r2)) {
       return addFrame(r1, r2 , r3)
     }

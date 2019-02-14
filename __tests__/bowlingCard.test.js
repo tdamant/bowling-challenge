@@ -76,20 +76,40 @@ describe ("manager", () => {
           testManager.input(10, 4, 7);
           expect(testManager.frames[9].totalScore).toBe(21)
       });
-      describe("strike rolled in previous frame", () => {
-        let testManager = manager();
-        for(let i = 0; i < 8; i++ ){
+        describe("strike rolled in previous frame", () => {
+          let testManager = manager();
+          for(let i = 0; i < 8; i++ ){
+            testManager.input(1, 5);
+          };
+          testManager.input(10)
+          test("correctly updates 9th frame score", () => {
+            testManager.input(10,5,6);
+            expect(testManager.frames[8].totalScore).toBe(20);
+            expect(testManager.frames[9].totalScore).toBe(21)
+          })
+        })
+        describe("spare rolled in previous frame", () => {
+          let testManager = manager();
+          for(let i = 0; i < 8; i++ ){
+            testManager.input(1, 5);
+          };
+          testManager.input(1, 9)
+          test("correctly updates 8th frame score", () => {
+            testManager.input(10, 2 , 4)
+            expect(testManager.frames[8].totalScore).toBe(20)
+          })
+        })
+    });
+      describe("spare rolled", () => {
+        let testManager = manager()
+        for(let i = 0; i < 9; i++ ){
           testManager.input(1, 5);
-        };
-        testManager.input(10)
-        test("correctly updates 9th frame score", () => {
-          testManager.input(10,5,6);
-          expect(testManager.frames[8].totalScore).toBe(20);
-          expect(testManager.frames[9].totalScore).toBe(21)
+        }
+        test('correctly updates last frame', () => {
+          testManager.input(1,9,2);
+          expect(testManager.frames[9].totalScore).toBe(12)
         })
       })
-    });
-
   });
 
     describe("roll validation", () => {
