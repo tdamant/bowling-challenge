@@ -1,5 +1,8 @@
 const manager = require('../src/bowlingCard');
-testManager = manager()
+let testManager;
+beforeEach(function() {
+  testManager = manager()
+});
 describe ("manager", () => {
   describe ("input", () => {
     test("it adds a frame object to the frames array", () => {
@@ -7,6 +10,7 @@ describe ("manager", () => {
       expect(testManager.frames[0]).toBeInstanceOf(testManager.Frame)
     });
     test("it creates frames with correct params", () => {
+      testManager.input(4, 3);
       frame = testManager.frames[0];
       expect(frame.id).toBe(1);
       expect(frame.roll1).toBe(4);
@@ -16,37 +20,39 @@ describe ("manager", () => {
   });
     describe("when a stike is rolled", () => {
       test("it adds frame to frames w/o total score", () =>{
-        thirdManager = manager();
-        thirdManager.input(10);
-        expect(thirdManager.frames[0].roll1).toBe(10);
-        expect(thirdManager.frames[0].roll2).toBe(null);
-        expect(thirdManager.frames[0].totalScore).toBe(null);
+        testManager.input(10);
+        expect(testManager.frames[0].roll1).toBe(10);
+        expect(testManager.frames[0].roll2).toBe(null);
+        expect(testManager.frames[0].totalScore).toBe(null);
       });
       test("it updates total score once next frame is complete", () => {
-        thirdManager.input(1,5);
-        expect(thirdManager.frames[0].totalScore).toBe(16);
+        testManager.input(10);
+        testManager.input(1,5);
+        expect(testManager.frames[0].totalScore).toBe(16);
       });
       test("it only updates scores when a strike is rolled", () => {
-        thirdManager.input(2,3);
-        expect(thirdManager.frames[1].totalScore).toBe(6);
+        testManager.input(1 , 5);
+        testManager.input(2,3);
+        expect(testManager.frames[0].totalScore).toBe(6);
       })
     });
 
     describe("when a sapre is rolled", () => {
       test("it adds frame to frames w/o total score", () => {
-        fourthManager = manager();
-        fourthManager.input(1,9);
-        expect(fourthManager.frames[0].roll1).toBe(1);
-        expect(fourthManager.frames[0].roll2).toBe(9);
-        expect(fourthManager.frames[0].totalScore).toBe(null);
+        testManager.input(1,9);
+        expect(testManager.frames[0].roll1).toBe(1);
+        expect(testManager.frames[0].roll2).toBe(9);
+        expect(testManager.frames[0].totalScore).toBe(null);
       });
       test("it updates score after next frame", () => {
-        fourthManager.input(5,2);
-        expect(fourthManager.frames[0].totalScore).toBe(15)
+        testManager.input(1,9);
+        testManager.input(5,2);
+        expect(testManager.frames[0].totalScore).toBe(15)
       });
       test("it only updates scores when a spare is rolled", () =>{
-        fourthManager.input(1,5);
-        expect(fourthManager.frames[1].totalScore).toBe(7)
+        testManager.input(1,8);
+        testManager.input(1,5);
+        expect(testManager.frames[0].totalScore).toBe(9)
       })
     });
 
@@ -54,25 +60,26 @@ describe ("manager", () => {
 
     describe("final frame", () => {
       describe("non strike or spare rolled", () => {
-        fithManager = manager();
+        let testManager = manager()
         for(let i = 0; i < 9; i++ ){
-          fithManager.input(1, 5);
+          testManager.input(1, 5);
         }
         test("frame treated as normal", () => {
-          fithManager.input(1, 6);
-          expect(fithManager.frames[9].totalScore).toBe(7)
+          testManager.input(1, 6);
+          expect(testManager.frames[9].totalScore).toBe(7)
         });
       });
       describe("strike rolled", () => {
-        sixthManager = manager();
+        let testManager = manager()
         for(let i = 0; i < 9; i++ ){
-          sixthManager.input(1, 5);
+          testManager.input(1, 5);
         }
         test("three balls can be rolled", () => {
-          sixthManager.input(10, 4, 7);
-          expect(sixthManager.frames[9].totalScore).toBe(21)
+          testManager.input(10, 4, 7);
+          expect(testManager.frames[9].totalScore).toBe(21)
       });
     });
+
   });
 
     describe("roll validation", () => {
