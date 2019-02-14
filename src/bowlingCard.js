@@ -2,6 +2,8 @@
 // tidy up optional params
 // encapsulate further
 // test third roll validation
+// add tests to check adding third role outside of 10th frame isn't allowed
+// stop games going on past 10 frames
 
 function manager(){
   var frames = []
@@ -19,7 +21,7 @@ function manager(){
   function checkRolls (a, b) {
     let isvalidRoll = ((a >= 0 && a < 11) && ((b >= 0 && b < 11) || b === null))
     if (!isvalidRoll) {
-      throw("invalid role")
+      throw("invalid roll")
     };
   };
 
