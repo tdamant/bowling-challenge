@@ -5,12 +5,14 @@
 
 function manager(){
   var frames = []
-  var lastFrameStrikeorSpare = false
+  var lastFrameStrike = false
+  var lastFrameSpare = false
 
   function input(r1, r2=null, r3=null){
     checkRolls( r1, r2);
     if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)}
-    if (lastFrameStrikeorSpare) {updatelastStrikeorSpare(r1,r2)};
+    if (lastFrameStrike) {updatelastStrike(r1,r2)};
+    if (lastFrameSpare) {updatelastSpare(r1)};
     addFrame(r1, r2);
   };
 
@@ -22,8 +24,9 @@ function manager(){
   };
 
   function finalFrameInput(r1, r2, r3){
-    if (lastFrameStrikeorSpare) { updatelastStrikeorSpare(r1, r2)}
-    if (isStrikeorSpare(r1, r2)) {
+    if (lastFrameStrike) {updatelastStrike(r1,r2)};
+    if (lastFrameSpare) {updatelastSpare(r1)};
+    if (isStrike(r1) || isSpare(r1, r2)) {
       return addFrame(r1, r2 , r3)
     }
     addFrame(r1 ,r2)
@@ -33,31 +36,40 @@ function manager(){
     return frames.length === 9
   }
 
-  function updatelastStrikeorSpare(r1,r2=0){
-      frame = frames[(frames.length - 1)];
-      if (frame.roll1 === 10) {
-        let bonus = r1 + r2;
-        if (bonus > 10) {
-          bonus = 10
-        }
-        return frame.totalScore += bonus
-      }
-      frame.totalScore += r1
-  };
-
   function addFrame (r1, r2, r3 = null) {
-      isStrikeorSpare(r1,r2)
+      isStrike(r1);
+      isSpare(r1, r2)
       frame = new Frame((frames.length + 1), r1, r2, (r1 + r2 + r3), r3)
       frames.push(frame);
   }
 
-  function isStrikeorSpare(r1, r2) {
-    if (r1 === 10 || (r1+r2 === 10)){
-      lastFrameStrikeorSpare = true
+  function isStrike(r1) {
+    if (r1 === 10){
+      lastFrameStrike = true
       return true
     };
     false
   };
+
+  function isSpare(r1, r2) {
+    if (r1 + r2 === 10 && r1 !== 10){
+      lastFrameSpare = true
+      return true
+    };
+    false
+  };
+
+  function updatelastStrike(r1, r2) {
+    frame = frames[(frames.length - 1)];
+    let bonus = r1 + r2;
+    if (bonus > 10) {bonus = 10}
+    frame.totalScore += bonus
+  }
+
+  function updatelastSpare(r1) {
+    frame = frames[(frames.length - 1)];
+    frame.totalScore += r1
+  }
 
   function Frame(frameNo, r1, r2=null, totalScore, r3 = null) {
     this.id = frameNo;
