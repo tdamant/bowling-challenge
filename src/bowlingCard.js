@@ -23,6 +23,9 @@ function manager(){
     if (!isvalidRoll) {
       throw("invalid roll")
     };
+    if (frames.length < 9 && (a+b > 10)) {
+      throw("roll can't be more than 10")
+    }
   };
 
   function finalFrameInput(r1, r2, r3){

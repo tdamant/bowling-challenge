@@ -133,5 +133,10 @@ describe ("manager", () => {
           gameManager.input("A",4);
         }).toThrowError("invalid roll");
       });
+      test("can't roll more than 10", () => {
+        expect(() => {
+          gameManager.input(10, 4);
+        }).toThrowError("roll can't be more than 10");
+      })
     });
 });
