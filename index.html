@@ -8,8 +8,9 @@
 
   <body align='center'>
     <h1>Bowling Scorecard</h1>
-    <form class="" action="index.html" method="post">
-      <select id='roll1'>
+    <form id="roll-inputs"class="" action="index.html" method="post">
+      <select id='roll1' value = "roll 1">
+        <option selected hidden>Roll 1 score</option>
         <option value=0>0</option>
         <option value=1>1</option>
         <option value=2>2</option>
@@ -23,6 +24,8 @@
         <option value=10>10</option>
       </select>
       <select id='roll2'>
+        Roll 2:
+        <option selected hidden>Roll 2 score</option>
         <option value=0>0</option>
         <option value=0>-</option>
         <option value=1>1</option>
@@ -36,8 +39,8 @@
         <option value=9>9</option>
         <option value=10>10</option>
       </select>
-      <input type="submit" id="submit" value="submit">
     </form>
+    <input type="submit" id="submit" value="submit">
     <table id = 'table'>
    <tr>
      <th id="frame-header">Frame Number</th>

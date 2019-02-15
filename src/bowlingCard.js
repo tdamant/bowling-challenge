@@ -11,20 +11,25 @@ function manager(){
   var lastFrameSpare = false
 
   function input(r1, r2=null, r3=null){
-    checkRolls(r1, r2);
+    checkRolls(r1, r2, r3);
     if (lastFrameStrike) {updatelastStrike(r1,r2)};
     if (lastFrameSpare) {updatelastSpare(r1)};
     if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)};
     return addFrame(r1, r2);
   };
 
-  function checkRolls (a, b) {
-    let isvalidRoll = ((a >= 0 && a < 11) && (b >= 0 && b < 11))
-    if (!isvalidRoll) {
-      throw("invalid roll")
-    };
-    if (frames.length < 9 && (a+b > 10)) {
+  function checkRolls (r1, r2, r3) {
+
+    if (frames.length < 9 && (r1 + r2 > 10)) {
       throw("roll can't be more than 10")
+    }
+
+    if (frames.length === 9) {checkFinalRolls(r1, r2 ,r3 )}
+
+    function checkFinalRolls(r1, r2, r3) {
+      if ((r1 !== 10) && ((r1 + r2) !== 10)) {
+        if(r3 !== null){throw"invalid roll"}
+      }
     }
   };
 

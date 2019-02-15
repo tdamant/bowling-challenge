@@ -67,7 +67,16 @@ describe ("manager", () => {
           gameManager.input(1, 6);
           expect(gameManager.frames[9].totalScore).toBe(7)
         });
-      });
+        test("can't roll 3 times", () => {
+          let gameManager = manager();
+          for(let i = 0; i < 9; i++ ){
+            gameManager.input(1, 5);
+          }
+          expect(() => {
+            gameManager.input(1,3,5)}).toThrowError("invalid roll")
+          });
+        });
+      // });
       describe("strike rolled", () => {
         let gameManager = manager()
         for(let i = 0; i < 9; i++ ){
@@ -114,26 +123,6 @@ describe ("manager", () => {
   });
 
     describe("roll validation", () => {
-      test("can't be more than 10", () => {
-        expect(() => {
-          gameManager.input(11,4);
-        }).toThrowError("invalid roll");
-      });
-      test("can't be more than 10", () => {
-        expect(() => {
-          gameManager.input(4,11);
-        }).toThrowError("invalid roll");
-      });
-      test("can't be less than 10", () => {
-        expect(() => {
-          gameManager.input(-4,4);
-        }).toThrowError("invalid roll");
-      });
-      test("must be a integer", () => {
-        expect(() => {
-          gameManager.input("A",4);
-        }).toThrowError("invalid roll");
-      });
       test("can't roll more than 10", () => {
         expect(() => {
           gameManager.input(10, 4);
