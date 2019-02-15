@@ -11,7 +11,7 @@ function manager(){
   var lastFrameSpare = false
 
   function input(r1, r2=null, r3=null){
-    checkRolls( r1, r2);
+    checkRolls(r1, r2);
     if (lastFrameStrike) {updatelastStrike(r1,r2)};
     if (lastFrameSpare) {updatelastSpare(r1)};
     if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)};
@@ -19,7 +19,7 @@ function manager(){
   };
 
   function checkRolls (a, b) {
-    let isvalidRoll = ((a >= 0 && a < 11) && ((b >= 0 && b < 11) || b === null))
+    let isvalidRoll = ((a >= 0 && a < 11) && (b >= 0 && b < 11))
     if (!isvalidRoll) {
       throw("invalid roll")
     };
@@ -29,9 +29,9 @@ function manager(){
   };
 
   function finalFrameInput(r1, r2, r3){
-    if (isStrike(r1) || isSpare(r1, r2)) {
-      return addFrame(r1, r2 , r3)
-    }
+    if ((r1===10) || (r1 + r2 ===10)) {
+    frame = new Frame((frames.length + 1), r1, r2, (r1 + r2 + r3), r3)
+    return frames.push(frame)};
     addFrame(r1 ,r2)
   }
 
@@ -40,25 +40,28 @@ function manager(){
   }
 
   function addFrame (r1, r2, r3 = null) {
-      isStrike(r1);
-      isSpare(r1, r2)
-      frame = new Frame((frames.length + 1), r1, r2, (r1 + r2 + r3), r3)
+      frame = new Frame((frames.length + 1), r1, r2, (r1 + r2 + r3), r3);
+      isStrike(frame);
+      isSpare(frame);
       frames.push(frame);
   }
 
-  function isStrike(r1) {
-    if (r1 === 10){
-      lastFrameStrike = true
+  function isStrike(frame) {
+    if (frame.roll1 === 10){
+      lastFrameStrike = true;
+      frame.roll2 = null
       return true
     };
+    lastFrameStrike = false;
     false
   };
 
-  function isSpare(r1, r2) {
-    if (r1 + r2 === 10 && r1 !== 10){
+  function isSpare(frame) {
+    if (frame.totalScore === 10 && frame.roll1 !== 10){
       lastFrameSpare = true
       return true
     };
+    lastFrameSpare = false
     false
   };
 
@@ -82,10 +85,15 @@ function manager(){
     this.totalScore = totalScore;
   };
 
+  function isLastFrameSpareStrike() {
+    return (lastFrameStrike || lastFrameSpare)
+  }
+
   return {
     Frame: Frame,
     frames: frames,
-    input: input
+    input: input,
+    isLastFrameSpareStrike: isLastFrameSpareStrike
   };
 };
 module.exports = manager;

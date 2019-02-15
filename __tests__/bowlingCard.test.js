@@ -20,12 +20,13 @@ describe ("manager", () => {
   });
     describe("when a stike is rolled", () => {
       test("it adds frame to frames", () =>{
-        gameManager.input(10);
+        // user input still treated as 0 on client side when first roll 10
+        gameManager.input(10, 0);
         expect(gameManager.frames[0].roll1).toBe(10);
         expect(gameManager.frames[0].roll2).toBe(null);
       });
       test("it updates total score once next frame is complete", () => {
-        gameManager.input(10);
+        gameManager.input(10, 0);
         gameManager.input(1,5);
         expect(gameManager.frames[0].totalScore).toBe(16);
       });
@@ -139,4 +140,23 @@ describe ("manager", () => {
         }).toThrowError("roll can't be more than 10");
       })
     });
+    describe("isLastFrameSpareStrike", () => {
+      test("it is false untill a spare or strike rolled", () => {
+        gameManager.input(1,2);
+        expect(gameManager.isLastFrameSpareStrike()).toBe(false)
+      });
+      test("it is true when a spare is rolled", () => {
+        gameManager.input(5,5);
+        expect(gameManager.isLastFrameSpareStrike()).toBe(true)
+      });
+      test("it is true when a strike is rolled", () => {
+        gameManager.input(10,0);
+        expect(gameManager.isLastFrameSpareStrike()).toBe(true)
+      });
+      test("it is false once a strike or spare not rolled", () => {
+        gameManager.input(10,0);
+        gameManager.input(1,3)
+        expect(gameManager.isLastFrameSpareStrike()).toBe(false)
+      })
+    })
 });
