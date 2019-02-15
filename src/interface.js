@@ -7,11 +7,8 @@ function buildTable() {
     };
 
     function addNewCells(i){
-      return `<td id="${i}-frame-number">${i}</td>`+
-      `<td id="${i}-r1"></td>`+
-      `<td id="${i}-r2"></td>`+
-      `<td id="${i}-frame-total"></td>`+
-      `<td id="${i}-running-score"></td>`
+      let div = `<td></td>`
+      return `<td>${i}</td>`+div+div+div+div
     };
     document.getElementById('table').insertAdjacentHTML('beforeend', addNewRow(i));
     document.getElementById(`frame-${i}`).insertAdjacentHTML('beforeend', addNewCells(i));
@@ -20,25 +17,30 @@ function buildTable() {
     addRowToTable(i)}
 }
 
-function updatePage(i) {
-  document.getElementById(`${i}-r1`).innerHTML = manager.frames[(i-1)].roll1;
-  document.getElementById(`${i}-r2`).innerHTML = manager.frames[(i-1)].roll2;
-  if(!manager.isLastFrameSpareStrike()) {
-    document.getElementById(`${i}-frame-total`).innerHTML = manager.frames[(i-1)].totalScore;
+function updatePage(frame) {
+  row = document.getElementById(`frame-${frame.id}`)
+  row.children[1].innerHTML = frame.roll1;
+  row.children[2].innerHTML = frame.roll2;
+  if(!manager.isLastFrameSpareStrike()){
+    row.children[3].innerHTML = frame.totalScore
   }
-  document.getElementById(`${i-1}-frame-total`).innerHTML = manager.frames[(i-2)].totalScore;
-  console.log(manager.isLastFrameSpareStrike())
+  updatePreviousFrame()
+};
 
+function updatePreviousFrame() {
+  frame = manager.frames[manager.frames.length - 2]
+  row = document.getElementById(`frame-${frame.id}`)
+  row.children[3].innerHTML = frame.totalScore
 }
 
-function listenToSubmit() {
 
+function listenToSubmit() {
   document.getElementById('submit').addEventListener('click', function(event){
     event.preventDefault();
     roll1 = parseInt(document.getElementById('roll1').value);
     roll2 = parseInt(document.getElementById('roll2').value);
-    manager.input(roll1, roll2);
-    updatePage(manager.frames.length);
+    frame = manager.input(roll1, roll2);
+    updatePage(frame);
   })
 };
 

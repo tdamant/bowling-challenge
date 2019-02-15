@@ -15,7 +15,7 @@ function manager(){
     if (lastFrameStrike) {updatelastStrike(r1,r2)};
     if (lastFrameSpare) {updatelastSpare(r1)};
     if (isfinalFrame()) { return finalFrameInput(r1, r2, r3)};
-    addFrame(r1, r2);
+    return addFrame(r1, r2);
   };
 
   function checkRolls (a, b) {
@@ -31,8 +31,9 @@ function manager(){
   function finalFrameInput(r1, r2, r3){
     if ((r1===10) || (r1 + r2 ===10)) {
     frame = new Frame((frames.length + 1), r1, r2, (r1 + r2 + r3), r3)
-    return frames.push(frame)};
-    addFrame(r1 ,r2)
+    frames.push(frame)
+    return frame};
+    return addFrame(r1 ,r2)
   }
 
   function isfinalFrame(){
@@ -44,6 +45,7 @@ function manager(){
       isStrike(frame);
       isSpare(frame);
       frames.push(frame);
+      return frame
   }
 
   function isStrike(frame) {
